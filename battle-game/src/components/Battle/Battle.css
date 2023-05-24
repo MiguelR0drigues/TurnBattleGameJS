@@ -219,3 +219,20 @@
 .shake-animation {
   animation: shake 0.5s ease-in-out;
 }
+
+.damage-taken {
+  font-size: 2.2rem;
+  font-weight: 600;
+  background-color: beige;
+  border-radius: 50px;
+  width: 5.5rem;
+  height: 3.2rem;
+  text-align: center;
+  border: 3px solid red;
+}
+
+.dt-player {
+  position: absolute;
+  left: 32rem;
+  top: 24rem;
+}

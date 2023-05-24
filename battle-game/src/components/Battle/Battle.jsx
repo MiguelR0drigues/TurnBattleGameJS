@@ -11,6 +11,8 @@ const Battle = () => {
   const [correctOption, setCorrectOption] = useState("");
   const [isPlayerShaking, setPlayerShaking] = useState(false);
   const [isOpponentShaking, setOpponentShaking] = useState(false);
+  const [playerDamageTaken, setPlayerDamageTaken] = useState(false);
+  const [opponentDamageTaken, setOpponentDamageTaken] = useState(false);
 
   const opponentHealthRef = useRef(null);
   const playerHealthRef = useRef(null);
@@ -80,6 +82,7 @@ const Battle = () => {
 
       // Update opponent's health based on player's attack
       setOpponentHealth((prevHealth) => prevHealth - totalDamage);
+      setOpponentDamageTaken(totalDamage);
 
       // Trigger animation by adding class to opponent health bar
       opponentHealthRef.current.classList.add("health-bar-animation");
@@ -94,6 +97,7 @@ const Battle = () => {
       // Player answered incorrectly, opponent attacks
       const opponentDamage = calculateOpponentDamage();
       setPlayerHealth((prevHealth) => prevHealth - opponentDamage);
+      setPlayerDamageTaken(opponentDamage);
 
       // Trigger animation by adding class to player health bar
       playerHealthRef.current.classList.add("health-bar-animation");
@@ -113,6 +117,8 @@ const Battle = () => {
     setTimeout(() => {
       setOpponentShaking(false);
       setPlayerShaking(false);
+      setOpponentDamageTaken(undefined);
+      setPlayerDamageTaken(undefined);
     }, 500); // Adjust the duration to match the animation duration
   };
 
@@ -146,6 +152,11 @@ const Battle = () => {
             <div className="pokemon-health-number">{opponentHealth} / 100</div>
           </div>
           <div className="opponent-pokemon">
+            {opponentDamageTaken && (
+              <div className="damage-taken dt-opponent">
+                -{opponentDamageTaken}
+              </div>
+            )}
             <img
               ref={opponentImageRef}
               src={opponentPokemon}
@@ -156,6 +167,9 @@ const Battle = () => {
         </div>
         <div className="player-container">
           <div className="your-pokemon">
+            {playerDamageTaken && (
+              <div className="damage-taken dt-player">-{playerDamageTaken}</div>
+            )}
             <img
               ref={playerImageRef}
               src={yourPokemon}
