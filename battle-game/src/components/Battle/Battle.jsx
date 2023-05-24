@@ -283,7 +283,9 @@ const Battle = () => {
           <div className="modal-content">
             <h2>Perdeste</h2>
             <p>Foste derrotado desta vez!</p>
-            <button onClick={handleMainMenuClick}>Voltar ao início</button>
+            <button onClick={handleMainMenuClick} onMouseEnter={playHoverSound}>
+              Voltar ao início
+            </button>
           </div>
         </div>
       )}
