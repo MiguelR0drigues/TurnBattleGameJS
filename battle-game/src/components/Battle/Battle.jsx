@@ -1,4 +1,7 @@
 import React, { useEffect, useRef, useState } from "react";
+import hoverSoundFile from "../../assets/audio/button-hover.mp3";
+import correctOptionSoundFile from "../../assets/audio/correct-option.mp3";
+import wrongOptionSoundFile from "../../assets/audio/wrong-option.mp3";
 import "./Battle.css";
 import opponentPokemon from "./charmander.png";
 import yourPokemon from "./pikachu.png";
@@ -18,11 +21,25 @@ const Battle = () => {
   const playerHealthRef = useRef(null);
   const opponentImageRef = useRef(null);
   const playerImageRef = useRef(null);
+  const hoverSoundRef = useRef(null);
+  const correctOptionSoundRef = useRef(null);
+  const wrongOptionSoundRef = useRef(null);
 
   useEffect(() => {
     // Fetch question and options from API
     fetchQuestion();
     // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  useEffect(() => {
+    hoverSoundRef.current = new Audio(hoverSoundFile);
+    hoverSoundRef.current.volume = 0.1;
+
+    correctOptionSoundRef.current = new Audio(correctOptionSoundFile);
+    correctOptionSoundRef.current.volume = 1.0;
+
+    wrongOptionSoundRef.current = new Audio(wrongOptionSoundFile);
+    wrongOptionSoundRef.current.volume = 0.2;
   }, []);
 
   const fetchQuestion = () => {
@@ -90,7 +107,8 @@ const Battle = () => {
         // Remove animation class after animation duration (in milliseconds)
         opponentHealthRef.current.classList.remove("health-bar-animation");
       }, 1000); // Change the duration to match your animation duration
-
+      // is correct, play sound
+      correctOptionSoundRef.current.play();
       // Shake your image by setting the state variable
       setPlayerShaking(true);
     } else {
@@ -106,6 +124,9 @@ const Battle = () => {
         playerHealthRef.current.classList.remove("health-bar-animation");
       }, 1000); // Change the duration to match your animation duration
 
+      // answer is wrong, play sound
+      wrongOptionSoundRef.current.play();
+
       // Shake opponent's image by setting the state variable
       setOpponentShaking(true);
     }
@@ -119,7 +140,7 @@ const Battle = () => {
       setPlayerShaking(false);
       setOpponentDamageTaken(undefined);
       setPlayerDamageTaken(undefined);
-    }, 500); // Adjust the duration to match the animation duration
+    }, 1000); // Adjust the duration to match the animation duration
   };
 
   const calculateOpponentDamage = () => {
@@ -132,6 +153,11 @@ const Battle = () => {
     }
 
     return baseDamage;
+  };
+
+  const playHoverSound = () => {
+    hoverSoundRef.current.currentTime = 0; // Reset the audio to the beginning
+    hoverSoundRef.current.play();
   };
 
   return (
@@ -213,6 +239,7 @@ const Battle = () => {
                   option === correctOption ? "correct-option" : ""
                 }`}
                 onClick={() => handlePlayerAnswer(option)}
+                onMouseEnter={playHoverSound}
               >
                 {option}
               </button>
