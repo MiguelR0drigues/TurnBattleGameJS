@@ -9,11 +9,11 @@ const Battle = () => {
   const [question, setQuestion] = useState("");
   const [options, setOptions] = useState([]);
   const [correctOption, setCorrectOption] = useState("");
-  const [showQuestion, setShowQuestion] = useState(false);
 
   useEffect(() => {
     // Fetch question and options from API
     fetchQuestion();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const fetchQuestion = () => {
@@ -40,9 +40,6 @@ const Battle = () => {
     setQuestion(question);
     setOptions(shuffledOptions);
     setCorrectOption(correctOption);
-
-    // Show the question to the player
-    setShowQuestion(true);
   };
 
   const shuffleOptions = (array) => {
