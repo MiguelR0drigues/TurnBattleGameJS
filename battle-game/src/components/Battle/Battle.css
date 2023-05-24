@@ -1,0 +1,188 @@
+/* Battle.css */
+
+.battle-background {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-image: url("./background.png");
+  background-size: cover;
+  z-index: -1;
+}
+
+.battle-container h2 {
+  font-size: 24px;
+  margin-bottom: 20px;
+}
+
+.battle-container button {
+  padding: 10px 20px;
+  font-size: 16px;
+  background-color: #4f9bff;
+  color: #fff;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  margin-top: 20px;
+  border-radius: 25px;
+}
+
+.battle-container button:hover {
+  background-color: #3083c8;
+}
+
+.battle-container p {
+  margin-top: 10px;
+  font-size: 18px;
+}
+
+.bottom-container {
+  position: fixed;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  bottom: 0;
+  width: 100%;
+  height: 10rem;
+  padding: 0px;
+  margin: 0;
+}
+
+.question-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: beige;
+  width: 50%;
+  height: 100%;
+  margin: 15px;
+  margin-bottom: 50px;
+  border-radius: 25px;
+  text-align: center;
+  font-size: 2.3rem;
+  font-family: "Courier New", Courier, monospace;
+  font-weight: bold;
+  border: 15px double darkgray;
+}
+
+.options-container {
+  width: 50%;
+  margin: 15px;
+  height: 100%;
+  display: grid;
+  grid-template-columns: repeat(2, 1fr); /* Two columns with equal width */
+  grid-template-rows: repeat(2, 1fr); /* Two rows with equal height */
+  gap: 10px; /* Gap between grid items */
+  justify-items: center; /* Center items horizontally */
+  align-items: center; /* Center items vertically */
+  flex-wrap: wrap;
+  margin-bottom: 50px;
+}
+
+.options-container > button {
+  flex-grow: 1;
+  flex-basis: calc(50% - 10px);
+  height: 100%;
+  width: 100%;
+  margin: 5px;
+}
+
+.your-pokemon > img {
+  height: 25rem;
+  margin-bottom: -3rem;
+  margin-left: -1.5rem;
+}
+
+.player-container {
+  display: flex;
+  flex-direction: row;
+  align-items: flex-end;
+  justify-content: space-around;
+  height: 20rem;
+  margin-top: 26rem;
+}
+
+.your-health {
+  border: 3px solid yellow;
+  background-color: rgb(109, 109, 109, 0.9);
+  min-height: 50%;
+  min-width: 30rem;
+  margin-right: -20rem;
+  margin-bottom: 0rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+  padding: 10px;
+  border-radius: 25px 0 0 25px;
+  color: white;
+}
+
+.pokemon-name {
+  width: 100%;
+  text-align: start;
+  margin-left: 20px;
+  font-size: 24px;
+  font-weight: 500;
+}
+
+.pokemon-health-bar {
+  width: 60%;
+  color: black;
+  border-radius: 10px;
+  text-align: center;
+  margin: 0 auto;
+  font-size: 24px;
+  font-weight: 500;
+  background-color: rgb(255, 255, 255);
+  padding: 8px;
+}
+
+.pokemon-health-bar progress {
+  background-color: rgb(62, 255, 3);
+}
+
+.pokemon-health-bar progress::-webkit-progress-value {
+  background-color: rgb(62, 255, 3);
+}
+
+.pokemon-health-bar progress::-moz-progress-bar {
+  background-color: rgb(62, 255, 3);
+}
+
+.pokemon-health-number {
+  width: 100%;
+  text-align: end;
+  font-size: 24px;
+  font-weight: 500;
+}
+
+.opponent-container {
+  position: absolute;
+  width: 100%;
+  display: flex;
+  height: fit-content;
+  align-items: flex-end;
+  justify-content: space-around;
+  height: 20rem;
+  margin-top: 10rem;
+}
+
+.opponent-pokemon > img {
+  height: 20rem;
+}
+
+.opponent-health {
+  border: 3px solid yellow;
+  background-color: rgb(109, 109, 109, 0.9);
+  min-height: 50%;
+  min-width: 30rem;
+  margin-left: -18rem;
+  margin-bottom: 10rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+  padding: 10px;
+  border-radius: 0 25px 25px 0;
+  color: white;
+}
