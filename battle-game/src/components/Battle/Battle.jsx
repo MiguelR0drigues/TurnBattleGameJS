@@ -1,4 +1,5 @@
 import React, { useEffect, useRef, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import hoverSoundFile from "../../assets/audio/button-hover.mp3";
 import correctOptionSoundFile from "../../assets/audio/correct-option.mp3";
 import wrongOptionSoundFile from "../../assets/audio/wrong-option.mp3";
@@ -16,6 +17,8 @@ const Battle = () => {
   const [isOpponentShaking, setOpponentShaking] = useState(false);
   const [playerDamageTaken, setPlayerDamageTaken] = useState(false);
   const [opponentDamageTaken, setOpponentDamageTaken] = useState(false);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isPageDisabled, setIsPageDisabled] = useState(false);
 
   const opponentHealthRef = useRef(null);
   const playerHealthRef = useRef(null);
@@ -41,6 +44,21 @@ const Battle = () => {
     wrongOptionSoundRef.current = new Audio(wrongOptionSoundFile);
     wrongOptionSoundRef.current.volume = 0.2;
   }, []);
+
+  useEffect(() => {
+    if (playerHealth <= 0) {
+      handlePlayerDefeat();
+    }
+  }, [playerHealth]);
+
+  const navigate = useNavigate();
+
+  const handleMainMenuClick = () => {
+    // Reset game state if needed
+    // ...
+
+    navigate("/");
+  };
 
   const fetchQuestion = () => {
     // Make API call to fetch question and options
@@ -162,94 +180,116 @@ const Battle = () => {
     hoverSoundRef.current.play();
   };
 
+  const handlePlayerDefeat = () => {
+    setIsModalOpen(true);
+    setIsPageDisabled(true);
+  };
+
   return (
-    <div className="battle-container">
-      <div className="battle-background">
-        <div className="opponent-container">
-          <div className="opponent-health">
-            <div className="pokemon-name">Charmander (Adversário)</div>
-            <div className="pokemon-health-bar">
-              <label htmlFor="opponent-health">HP </label>
-              <progress
-                ref={opponentHealthRef}
-                id="opponent-health"
-                value={opponentHealth}
-                max="100"
-              ></progress>
-            </div>
-            <div className="pokemon-health-number">{opponentHealth} / 100</div>
-          </div>
-          <div className="opponent-pokemon">
-            {opponentDamageTaken && (
-              <div className="damage-taken dt-opponent">
-                -{opponentDamageTaken}
+    <>
+      <div className="battle-container">
+        <div className="battle-background">
+          <div className="opponent-container">
+            <div className="opponent-health">
+              <div className="pokemon-name">Charmander (Adversário)</div>
+              <div className="pokemon-health-bar">
+                <label htmlFor="opponent-health">HP </label>
+                <progress
+                  ref={opponentHealthRef}
+                  id="opponent-health"
+                  value={opponentHealth}
+                  max="100"
+                ></progress>
               </div>
-            )}
-            <img
-              ref={opponentImageRef}
-              src={opponentPokemon}
-              alt="opponent pokemon"
-              className={
-                isOpponentShaking
-                  ? "shake-animation"
-                  : opponentDamageTaken
-                  ? "blink-animation"
-                  : ""
-              }
-            />
-          </div>
-        </div>
-        <div className="player-container">
-          <div className="your-pokemon">
-            {playerDamageTaken && (
-              <div className="damage-taken dt-player">-{playerDamageTaken}</div>
-            )}
-            <img
-              ref={playerImageRef}
-              src={yourPokemon}
-              alt="your pokemon choice"
-              className={
-                isPlayerShaking
-                  ? "shake-animation"
-                  : playerDamageTaken
-                  ? "blink-animation"
-                  : ""
-              }
-            />
-          </div>
-          <div className="your-health">
-            <div className="pokemon-name">Pikachu (Tu)</div>
-            <div className="pokemon-health-bar">
-              <label htmlFor="player-health">HP </label>
-              <progress
-                ref={playerHealthRef}
-                id="player-health"
-                value={playerHealth}
-                max="100"
-              ></progress>
+              <div className="pokemon-health-number">
+                {opponentHealth} / 100
+              </div>
             </div>
-            <div className="pokemon-health-number">{playerHealth} / 100</div>
+            <div className="opponent-pokemon">
+              {opponentDamageTaken && (
+                <div className="damage-taken dt-opponent">
+                  -{opponentDamageTaken}
+                </div>
+              )}
+              <img
+                ref={opponentImageRef}
+                src={opponentPokemon}
+                alt="opponent pokemon"
+                className={
+                  isOpponentShaking
+                    ? "shake-animation"
+                    : opponentDamageTaken
+                    ? "blink-animation"
+                    : ""
+                }
+              />
+            </div>
           </div>
-        </div>
-        <div className="bottom-container">
-          <div className="question-container">{question}</div>
-          <div className="options-container">
-            {options.map((option, index) => (
-              <button
-                key={index}
-                className={`option-button ${
-                  option === correctOption ? "correct-option" : ""
-                }`}
-                onClick={() => handlePlayerAnswer(option)}
-                onMouseEnter={playHoverSound}
-              >
-                {option}
-              </button>
-            ))}
+          <div className="player-container">
+            <div className="your-pokemon">
+              {playerDamageTaken && (
+                <div className="damage-taken dt-player">
+                  -{playerDamageTaken}
+                </div>
+              )}
+              <img
+                ref={playerImageRef}
+                src={yourPokemon}
+                alt="your pokemon choice"
+                className={
+                  isPlayerShaking
+                    ? "shake-animation"
+                    : playerDamageTaken
+                    ? "blink-animation"
+                    : ""
+                }
+              />
+            </div>
+            <div className="your-health">
+              <div className="pokemon-name">Pikachu (Tu)</div>
+              <div className="pokemon-health-bar">
+                <label htmlFor="player-health">HP </label>
+                <progress
+                  ref={playerHealthRef}
+                  id="player-health"
+                  value={playerHealth}
+                  max="100"
+                ></progress>
+              </div>
+              <div className="pokemon-health-number">{playerHealth} / 100</div>
+            </div>
+          </div>
+          <div className="bottom-container">
+            <div className="question-container">{question}</div>
+            <div className="options-container">
+              {options.map((option, index) => (
+                <button
+                  key={index}
+                  className={`option-button ${
+                    option === correctOption ? "correct-option" : ""
+                  }`}
+                  onClick={() => handlePlayerAnswer(option)}
+                  onMouseEnter={playHoverSound}
+                >
+                  {option}
+                </button>
+              ))}
+            </div>
           </div>
         </div>
       </div>
-    </div>
+      {isModalOpen && (
+        <div className="modal-overlay">
+          <div className="modal-content">
+            <h2>Perdeste</h2>
+            <p>Foste derrotado desta vez!</p>
+            <button onClick={handleMainMenuClick}>Voltar ao início</button>
+          </div>
+        </div>
+      )}
+
+      {isPageDisabled && <div className="page-overlay" />}
+    </>
   );
 };
 
