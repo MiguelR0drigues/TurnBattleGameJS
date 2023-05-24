@@ -91,3 +91,9 @@ h1 {
 .continue-btn:hover {
   background-color: #fbb200;
 }
+
+.continue-btn.disabled {
+  background-color: gainsboro;
+  color: darkgrey;
+  cursor: not-allowed;
+}

@@ -4,6 +4,7 @@ import "./selection.css";
 
 const Selection = () => {
   const [characters, setCharacters] = useState([]);
+  const [selectedChar, setSelectedChar] = useState(undefined);
   const navigate = useNavigate();
 
   const chars = [
@@ -45,6 +46,7 @@ const Selection = () => {
         selected: prevCharacter.id === character.id,
       }))
     );
+    setSelectedChar(character);
   };
 
   return (
@@ -69,7 +71,11 @@ const Selection = () => {
           </div>
         ))}
       </div>
-      <button className="continue-btn" onClick={() => navigate("/battle")}>
+      <button
+        className={`continue-btn ${!selectedChar ? "disabled" : ""}`}
+        onClick={() => navigate("/battle")}
+        disabled={!selectedChar}
+      >
         Continuar
       </button>
     </div>

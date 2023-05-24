@@ -115,10 +115,10 @@
 .your-health {
   border: 3px solid yellow;
   background-color: rgb(109, 109, 109, 0.9);
-  min-height: 50%;
+  min-height: 40%;
   min-width: 30rem;
   margin-right: -20rem;
-  margin-bottom: 1rem;
+  margin-bottom: 2.5rem;
   display: flex;
   flex-direction: column;
   justify-content: space-around;

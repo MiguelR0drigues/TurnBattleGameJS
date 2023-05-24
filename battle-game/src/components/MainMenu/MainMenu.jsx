@@ -26,7 +26,11 @@ const MainMenu = () => {
             spellCheck="false"
           />
         </div>
-        <button className="continue-btn" onClick={() => navigate("/selection")}>
+        <button
+          className={`continue-btn ${!username ? "disabled" : ""}`}
+          onClick={() => navigate("/selection")}
+          disabled={!username}
+        >
           Continuar
         </button>
       </div>
