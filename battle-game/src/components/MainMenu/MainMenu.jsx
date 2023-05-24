@@ -1,8 +1,11 @@
 import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
+
 import "./MainMenu.css";
 
 const MainMenu = () => {
   const [username, setUsername] = useState("");
+  const navigate = useNavigate();
 
   const handleUsernameChange = (event) => {
     setUsername(event.target.value);
@@ -19,11 +22,13 @@ const MainMenu = () => {
             id="username"
             value={username}
             onChange={handleUsernameChange}
-            autocomplete="off"
+            autoComplete="off"
             spellCheck="false"
           />
         </div>
-        <button className="continue-btn">Continuar</button>
+        <button className="continue-btn" onClick={() => navigate("/selection")}>
+          Continuar
+        </button>
       </div>
     </div>
   );

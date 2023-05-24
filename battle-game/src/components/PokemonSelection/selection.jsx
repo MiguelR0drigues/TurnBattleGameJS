@@ -1,8 +1,10 @@
 import React, { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import "./selection.css";
 
 const Selection = () => {
   const [characters, setCharacters] = useState([]);
+  const navigate = useNavigate();
 
   const chars = [
     { id: 1, name: "Eevee", image: "eevee.png" },
@@ -67,7 +69,9 @@ const Selection = () => {
           </div>
         ))}
       </div>
-      <button className="continue-btn">Continuar</button>
+      <button className="continue-btn" onClick={() => navigate("/battle")}>
+        Continuar
+      </button>
     </div>
   );
 };
