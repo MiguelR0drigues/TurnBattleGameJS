@@ -108,6 +108,7 @@ const Battle = () => {
         opponentHealthRef.current.classList.remove("health-bar-animation");
       }, 1000); // Change the duration to match your animation duration
       // is correct, play sound
+      correctOptionSoundRef.current.currentTime = 0;
       correctOptionSoundRef.current.play();
       // Shake your image by setting the state variable
       setPlayerShaking(true);
@@ -125,6 +126,7 @@ const Battle = () => {
       }, 1000); // Change the duration to match your animation duration
 
       // answer is wrong, play sound
+      wrongOptionSoundRef.current.currentTime = 0;
       wrongOptionSoundRef.current.play();
 
       // Shake opponent's image by setting the state variable
