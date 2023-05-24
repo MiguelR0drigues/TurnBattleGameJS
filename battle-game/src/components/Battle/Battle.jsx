@@ -9,6 +9,8 @@ const Battle = () => {
   const [question, setQuestion] = useState("");
   const [options, setOptions] = useState([]);
   const [correctOption, setCorrectOption] = useState("");
+  const [isPlayerShaking, setPlayerShaking] = useState(false);
+  const [isOpponentShaking, setOpponentShaking] = useState(false);
 
   const opponentHealthRef = useRef(null);
   const playerHealthRef = useRef(null);
@@ -86,8 +88,8 @@ const Battle = () => {
         opponentHealthRef.current.classList.remove("health-bar-animation");
       }, 1000); // Change the duration to match your animation duration
 
-      // Shake opponent's image by adding the animation class
-      opponentImageRef.current.classList.add("shake-animation");
+      // Shake your image by setting the state variable
+      setPlayerShaking(true);
     } else {
       // Player answered incorrectly, opponent attacks
       const opponentDamage = calculateOpponentDamage();
@@ -100,17 +102,17 @@ const Battle = () => {
         playerHealthRef.current.classList.remove("health-bar-animation");
       }, 1000); // Change the duration to match your animation duration
 
-      // Shake player's image by adding the animation class
-      playerImageRef.current.classList.add("shake-animation");
+      // Shake opponent's image by setting the state variable
+      setOpponentShaking(true);
     }
 
     // Fetch the next question for the player
     fetchQuestion();
 
-    // Remove the shaking animation class after the animation finishes
+    // Remove the shaking animation state after the animation finishes
     setTimeout(() => {
-      opponentImageRef.current.classList.remove("shake-animation");
-      playerImageRef.current.classList.remove("shake-animation");
+      setOpponentShaking(false);
+      setPlayerShaking(false);
     }, 500); // Adjust the duration to match the animation duration
   };
 
@@ -144,12 +146,22 @@ const Battle = () => {
             <div className="pokemon-health-number">{opponentHealth} / 100</div>
           </div>
           <div className="opponent-pokemon">
-            <img src={opponentPokemon} alt="opponent pokemon" />
+            <img
+              ref={opponentImageRef}
+              src={opponentPokemon}
+              alt="opponent pokemon"
+              className={isOpponentShaking ? "shake-animation" : ""}
+            />
           </div>
         </div>
         <div className="player-container">
           <div className="your-pokemon">
-            <img src={yourPokemon} alt="your pokemon choice" />
+            <img
+              ref={playerImageRef}
+              src={yourPokemon}
+              alt="your pokemon choice"
+              className={isPlayerShaking ? "shake-animation" : ""}
+            />
           </div>
           <div className="your-health">
             <div className="pokemon-name">Pikachu (You)</div>
