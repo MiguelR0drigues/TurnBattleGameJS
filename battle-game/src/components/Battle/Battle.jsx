@@ -161,7 +161,13 @@ const Battle = () => {
               ref={opponentImageRef}
               src={opponentPokemon}
               alt="opponent pokemon"
-              className={isOpponentShaking ? "shake-animation" : ""}
+              className={
+                isOpponentShaking
+                  ? "shake-animation"
+                  : opponentDamageTaken
+                  ? "blink-animation"
+                  : ""
+              }
             />
           </div>
         </div>
@@ -174,7 +180,13 @@ const Battle = () => {
               ref={playerImageRef}
               src={yourPokemon}
               alt="your pokemon choice"
-              className={isPlayerShaking ? "shake-animation" : ""}
+              className={
+                isPlayerShaking
+                  ? "shake-animation"
+                  : playerDamageTaken
+                  ? "blink-animation"
+                  : ""
+              }
             />
           </div>
           <div className="your-health">
