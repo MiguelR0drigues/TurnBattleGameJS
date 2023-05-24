@@ -28,6 +28,8 @@ const Battle = () => {
   const correctOptionSoundRef = useRef(null);
   const wrongOptionSoundRef = useRef(null);
 
+  const navigate = useNavigate();
+
   useEffect(() => {
     // Fetch question and options from API
     fetchQuestion();
@@ -51,12 +53,7 @@ const Battle = () => {
     }
   }, [playerHealth]);
 
-  const navigate = useNavigate();
-
   const handleMainMenuClick = () => {
-    // Reset game state if needed
-    // ...
-
     navigate("/");
   };
 
@@ -116,7 +113,10 @@ const Battle = () => {
       const totalDamage = isCritical ? baseDamage + 10 : baseDamage;
 
       // Update opponent's health based on player's attack
-      setOpponentHealth((prevHealth) => prevHealth - totalDamage);
+      const newOpponentHealth = opponentHealth - totalDamage;
+      const clampedOpponentHealth =
+        newOpponentHealth < 0 ? 0 : newOpponentHealth;
+      setOpponentHealth(clampedOpponentHealth);
       setOpponentDamageTaken(totalDamage);
 
       // Trigger animation by adding class to opponent health bar
@@ -125,15 +125,19 @@ const Battle = () => {
         // Remove animation class after animation duration (in milliseconds)
         opponentHealthRef.current.classList.remove("health-bar-animation");
       }, 1000); // Change the duration to match your animation duration
+
       // is correct, play sound
       correctOptionSoundRef.current.currentTime = 0;
       correctOptionSoundRef.current.play();
+
       // Shake your image by setting the state variable
       setPlayerShaking(true);
     } else {
       // Player answered incorrectly, opponent attacks
       const opponentDamage = calculateOpponentDamage();
-      setPlayerHealth((prevHealth) => prevHealth - opponentDamage);
+      const newPlayerHealth = playerHealth - opponentDamage;
+      const clampedPlayerHealth = newPlayerHealth < 0 ? 0 : newPlayerHealth;
+      setPlayerHealth(clampedPlayerHealth);
       setPlayerDamageTaken(opponentDamage);
 
       // Trigger animation by adding class to player health bar
