@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import "./Battle.css";
 import opponentPokemon from "./charmander.png";
 import yourPokemon from "./pikachu.png";
@@ -9,6 +9,11 @@ const Battle = () => {
   const [question, setQuestion] = useState("");
   const [options, setOptions] = useState([]);
   const [correctOption, setCorrectOption] = useState("");
+
+  const opponentHealthRef = useRef(null);
+  const playerHealthRef = useRef(null);
+  const opponentImageRef = useRef(null);
+  const playerImageRef = useRef(null);
 
   useEffect(() => {
     // Fetch question and options from API
@@ -73,14 +78,40 @@ const Battle = () => {
 
       // Update opponent's health based on player's attack
       setOpponentHealth((prevHealth) => prevHealth - totalDamage);
+
+      // Trigger animation by adding class to opponent health bar
+      opponentHealthRef.current.classList.add("health-bar-animation");
+      setTimeout(() => {
+        // Remove animation class after animation duration (in milliseconds)
+        opponentHealthRef.current.classList.remove("health-bar-animation");
+      }, 1000); // Change the duration to match your animation duration
+
+      // Shake opponent's image by adding the animation class
+      opponentImageRef.current.classList.add("shake-animation");
     } else {
       // Player answered incorrectly, opponent attacks
       const opponentDamage = calculateOpponentDamage();
       setPlayerHealth((prevHealth) => prevHealth - opponentDamage);
+
+      // Trigger animation by adding class to player health bar
+      playerHealthRef.current.classList.add("health-bar-animation");
+      setTimeout(() => {
+        // Remove animation class after animation duration (in milliseconds)
+        playerHealthRef.current.classList.remove("health-bar-animation");
+      }, 1000); // Change the duration to match your animation duration
+
+      // Shake player's image by adding the animation class
+      playerImageRef.current.classList.add("shake-animation");
     }
 
     // Fetch the next question for the player
     fetchQuestion();
+
+    // Remove the shaking animation class after the animation finishes
+    setTimeout(() => {
+      opponentImageRef.current.classList.remove("shake-animation");
+      playerImageRef.current.classList.remove("shake-animation");
+    }, 500); // Adjust the duration to match the animation duration
   };
 
   const calculateOpponentDamage = () => {
@@ -102,8 +133,13 @@ const Battle = () => {
           <div className="opponent-health">
             <div className="pokemon-name">Charmander (Opponent)</div>
             <div className="pokemon-health-bar">
-              <label for="health">HP </label>
-              <progress id="health" value={opponentHealth} max="100"></progress>
+              <label htmlFor="opponent-health">HP </label>
+              <progress
+                ref={opponentHealthRef}
+                id="opponent-health"
+                value={opponentHealth}
+                max="100"
+              ></progress>
             </div>
             <div className="pokemon-health-number">{opponentHealth} / 100</div>
           </div>
@@ -118,8 +154,13 @@ const Battle = () => {
           <div className="your-health">
             <div className="pokemon-name">Pikachu (You)</div>
             <div className="pokemon-health-bar">
-              <label for="health">HP </label>
-              <progress id="health" value={playerHealth} max="100"></progress>
+              <label htmlFor="player-health">HP </label>
+              <progress
+                ref={playerHealthRef}
+                id="player-health"
+                value={playerHealth}
+                max="100"
+              ></progress>
             </div>
             <div className="pokemon-health-number">{playerHealth} / 100</div>
           </div>

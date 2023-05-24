@@ -186,3 +186,36 @@
   border-radius: 0 25px 25px 0;
   color: white;
 }
+
+.health-bar-animation {
+  position: relative;
+}
+
+.health-bar-animation::-webkit-progress-value {
+  background-color: red;
+  transition: width 0.7s linear;
+}
+
+.health-bar-animation.health-bar-animation::-webkit-progress-value {
+  background-color: red !important;
+  transition: width 0.7s linear;
+}
+
+@keyframes shake {
+  0% {
+    transform: translateX(0);
+  }
+  25% {
+    transform: translateX(-5px) rotate(-5deg);
+  }
+  75% {
+    transform: translateX(5px) rotate(5deg);
+  }
+  100% {
+    transform: translateX(0);
+  }
+}
+
+.shake-animation {
+  animation: shake 0.5s ease-in-out;
+}
