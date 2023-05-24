@@ -167,7 +167,7 @@ const Battle = () => {
       <div className="battle-background">
         <div className="opponent-container">
           <div className="opponent-health">
-            <div className="pokemon-name">Charmander (Opponent)</div>
+            <div className="pokemon-name">Charmander (Adversário)</div>
             <div className="pokemon-health-bar">
               <label htmlFor="opponent-health">HP </label>
               <progress
@@ -218,7 +218,7 @@ const Battle = () => {
             />
           </div>
           <div className="your-health">
-            <div className="pokemon-name">Pikachu (You)</div>
+            <div className="pokemon-name">Pikachu (Tu)</div>
             <div className="pokemon-health-bar">
               <label htmlFor="player-health">HP </label>
               <progress

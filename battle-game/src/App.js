@@ -1,10 +1,13 @@
 import "./App.css";
-import Battle from "./components/Battle/Battle";
-
+import MainMenu from "./components/MainMenu/MainMenu";
+// import Battle from "./components/Battle/Battle";
+// import Selection from "./components/PokemonSelection/selection";
 function App() {
   return (
     <div className="App">
-      <Battle />
+      {/* <Battle /> */}
+      <MainMenu />
+      {/* <Selection /> */}
     </div>
   );
 }
