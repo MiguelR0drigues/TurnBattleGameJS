@@ -5,10 +5,6 @@ import correctOptionSoundFile from "../../assets/audio/correct-option.mp3";
 
 import "./MainMenu.css";
 // TODO: ADD AGE GROUPS
-// TODO: ADD AGE GROUPS
-// TODO: ADD AGE GROUPS
-// TODO: ADD AGE GROUPS
-// TODO: ADD AGE GROUPS
 const MainMenu = () => {
   const [username, setUsername] = useState("");
   const navigate = useNavigate();
