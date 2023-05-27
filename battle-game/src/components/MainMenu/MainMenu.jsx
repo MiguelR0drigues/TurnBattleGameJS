@@ -4,7 +4,7 @@ import hoverSoundFile from "../../assets/audio/button-hover.mp3";
 import correctOptionSoundFile from "../../assets/audio/correct-option.mp3";
 
 import "./MainMenu.css";
-
+// TODO: ADD AGE GROUPS
 const MainMenu = () => {
   const [username, setUsername] = useState("");
   const navigate = useNavigate();
@@ -48,6 +48,7 @@ const MainMenu = () => {
             onChange={handleUsernameChange}
             autoComplete="off"
             spellCheck="false"
+            maxLength={60}
           />
         </div>
         <button
