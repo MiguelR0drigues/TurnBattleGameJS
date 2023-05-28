@@ -242,10 +242,29 @@ const Battle = () => {
       wrongOptionSoundRef.current.currentTime = 0;
       wrongOptionSoundRef.current.play();
 
+      const wrongAnswers = localStorage.getItem("wrongAnswers");
+      if (wrongAnswers) {
+        localStorage.setItem("wrongAnswers", [
+          ...wrongAnswers,
+          {
+            question: question,
+            correctOption: correctOption,
+            selectedOption: selectedOption,
+          },
+        ]);
+      } else {
+        localStorage.setItem("wrongAnswers", [
+          {
+            question: question,
+            correctOption: correctOption,
+            selectedOption: selectedOption,
+          },
+        ]);
+      }
+
       // Shake opponent's image by setting the state variable
       setOpponentShaking(true);
     }
-
     // Fetch the next question for the player
     fetchData();
 
