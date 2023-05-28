@@ -79,6 +79,7 @@ const Battle = () => {
     }
     if (opponentHealth <= 0) {
       handleOpponentDefeat();
+      console.log(level);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [playerHealth, opponentHealth]);
@@ -413,22 +414,17 @@ const Battle = () => {
           </div>
         </div>
       )}
-      {isModalOpen &&
-        opponentHealth <= 0 &&
-        playerCharacter.name === "Poliwag" && (
-          <div className="modal-overlay">
-            <div className="modal-content-success">
-              <h2>Parabéns!</h2>
-              <p>Concluiste o jogo e estás um mestra da ciber segurança!</p>
-              <button
-                onClick={handleMainMenuClick}
-                onMouseEnter={playHoverSound}
-              >
-                Voltar ao início
-              </button>
-            </div>
+      {isModalOpen && opponentHealth <= 0 && level === 3 && (
+        <div className="modal-overlay">
+          <div className="modal-content-success">
+            <h2>Parabéns!</h2>
+            <p>Concluiste o jogo e estás um mestra da ciber segurança!</p>
+            <button onClick={handleMainMenuClick} onMouseEnter={playHoverSound}>
+              Voltar ao início
+            </button>
           </div>
-        )}
+        </div>
+      )}
       {isModalOpen && playerHealth <= 0 && (
         <div className="modal-overlay">
           <div className="modal-content">
@@ -440,7 +436,7 @@ const Battle = () => {
           </div>
         </div>
       )}
-      {isModalOpen && opponentHealth <= 0 && (
+      {isModalOpen && opponentHealth <= 0 && level !== 3 && (
         <div className="modal-overlay">
           <div className="modal-content-success">
             <h2>Venceste</h2>
