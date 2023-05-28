@@ -22,7 +22,7 @@ body {
   border-radius: 25px;
   border: 10px solid brown;
   background-color: beige;
-  height: 20rem;
+  height: 25rem;
   width: 30rem;
   display: flex;
   align-items: center;
@@ -69,13 +69,13 @@ body {
 .continue-btn {
   padding: 10px 20px;
   background-color: #ffcc00;
-  border: none;
   border-radius: 5px;
   font-size: 18px;
   font-weight: bold;
   color: #333;
   cursor: pointer;
   transition: background-color 0.3s ease;
+  margin-bottom: 10px;
 }
 
 .continue-btn:hover {
@@ -86,4 +86,17 @@ body {
   background-color: gainsboro;
   color: darkgrey;
   cursor: not-allowed;
+  margin-bottom: 10px;
+}
+
+.groups-btns {
+  display: flex;
+  width: 60%;
+  justify-content: space-around;
+}
+
+.continue-btn.selected {
+  border: 2px solid rgb(156, 107, 107);
+  background-color: #fbb200;
+  transition: border-color 0.3s ease;
 }

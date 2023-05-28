@@ -4,9 +4,10 @@ import hoverSoundFile from "../../assets/audio/button-hover.mp3";
 import correctOptionSoundFile from "../../assets/audio/correct-option.mp3";
 
 import "./MainMenu.css";
-// TODO: ADD AGE GROUPS
+
 const MainMenu = () => {
   const [username, setUsername] = useState("");
+  const [age, setAge] = useState(undefined);
   const navigate = useNavigate();
 
   const hoverSoundRef = useRef(null);
@@ -14,6 +15,12 @@ const MainMenu = () => {
 
   const handleUsernameChange = (event) => {
     setUsername(event.target.value);
+    localStorage.setItem("username", event.target.value);
+  };
+
+  const handleAgeChange = (groupID) => {
+    setAge(groupID);
+    localStorage.setItem("ageGroupID", groupID);
   };
 
   const playHoverSound = () => {
@@ -51,10 +58,51 @@ const MainMenu = () => {
             maxLength={60}
           />
         </div>
+        <h4 style={{ margin: 0, marginBottom: "-20px" }}>
+          Seleciona a sua idade:
+        </h4>
+        {console.log(JSON.parse(localStorage.getItem("ageGroupID")) === 2)}
+        <div className="groups-btns">
+          <button
+            className={`continue-btn  ${
+              JSON.parse(localStorage.getItem("ageGroupID")) === 0
+                ? " selected"
+                : ""
+            }`}
+            onClick={() => handleAgeChange(0)}
+            onMouseEnter={playHoverSound}
+          >
+            - 11
+          </button>
+
+          <button
+            className={`continue-btn  ${
+              JSON.parse(localStorage.getItem("ageGroupID")) === 1
+                ? " selected"
+                : ""
+            }`}
+            onClick={() => handleAgeChange(1)}
+            onMouseEnter={playHoverSound}
+          >
+            11 - 13
+          </button>
+
+          <button
+            className={`continue-btn  ${
+              JSON.parse(localStorage.getItem("ageGroupID")) === 2
+                ? "selected"
+                : ""
+            }`}
+            onClick={() => handleAgeChange(2)}
+            onMouseEnter={playHoverSound}
+          >
+            13 +
+          </button>
+        </div>
         <button
-          className={`continue-btn ${!username ? "disabled" : ""}`}
+          className={`continue-btn ${!username || !age ? "disabled" : ""}`}
           onClick={handleContinue}
-          disabled={!username}
+          disabled={!username || !age}
           onMouseEnter={playHoverSound}
         >
           Continuar
