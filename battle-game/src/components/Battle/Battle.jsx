@@ -180,7 +180,8 @@ const Battle = () => {
   };
 
   const shuffleOptions = (array) => {
-    const [question, ...options] = array; // Destructure the question and options
+    // Destructure the question and options
+    const [question, ...options] = array;
     const shuffledOptions = [...options];
 
     for (let i = shuffledOptions.length - 1; i > 0; i--) {
@@ -190,8 +191,8 @@ const Battle = () => {
         shuffledOptions[i],
       ];
     }
-
-    return [question, ...shuffledOptions]; // Combine the shuffled options with the question
+    // Combine the shuffled options with the question
+    return [question, ...shuffledOptions];
   };
 
   const handlePlayerAnswer = (selectedOption) => {
@@ -242,25 +243,25 @@ const Battle = () => {
       wrongOptionSoundRef.current.currentTime = 0;
       wrongOptionSoundRef.current.play();
 
-      const wrongAnswers = localStorage.getItem("wrongAnswers");
-      if (wrongAnswers) {
-        localStorage.setItem("wrongAnswers", [
-          ...wrongAnswers,
-          {
-            question: question,
-            correctOption: correctOption,
-            selectedOption: selectedOption,
-          },
-        ]);
-      } else {
-        localStorage.setItem("wrongAnswers", [
-          {
-            question: question,
-            correctOption: correctOption,
-            selectedOption: selectedOption,
-          },
-        ]);
-      }
+      // const wrongAnswers = localStorage.getItem("wrongAnswers");
+      // if (wrongAnswers) {
+      //   localStorage.setItem("wrongAnswers", [
+      //     ...wrongAnswers,
+      //     {
+      //       question: question,
+      //       correctOption: correctOption,
+      //       selectedOption: selectedOption,
+      //     },
+      //   ]);
+      // } else {
+      //   localStorage.setItem("wrongAnswers", [
+      //     {
+      //       question: question,
+      //       correctOption: correctOption,
+      //       selectedOption: selectedOption,
+      //     },
+      //   ]);
+      // }
 
       // Shake opponent's image by setting the state variable
       setOpponentShaking(true);
@@ -412,7 +413,22 @@ const Battle = () => {
           </div>
         </div>
       )}
-
+      {isModalOpen &&
+        opponentHealth <= 0 &&
+        playerCharacter.name === "Poliwag" && (
+          <div className="modal-overlay">
+            <div className="modal-content-success">
+              <h2>Parabéns!</h2>
+              <p>Concluiste o jogo e estás um mestra da ciber segurança!</p>
+              <button
+                onClick={handleMainMenuClick}
+                onMouseEnter={playHoverSound}
+              >
+                Voltar ao início
+              </button>
+            </div>
+          </div>
+        )}
       {isModalOpen && playerHealth <= 0 && (
         <div className="modal-overlay">
           <div className="modal-content">
