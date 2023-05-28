@@ -1,12 +1,25 @@
-import "./Loader.css";
+import React, { useEffect, useState } from "react";
+
 const Loader = () => {
+  const [showLoader, setShowLoader] = useState(true);
+
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setShowLoader(false);
+    }, 3000);
+
+    return () => {
+      clearTimeout(timer);
+    };
+  }, []);
+
+  if (!showLoader) {
+    return null;
+  }
+
   return (
-    <div class="col-3">
-      <div class="snippet" data-title="dot-pulse">
-        <div class="stage">
-          <div class="dot-pulse"></div>
-        </div>
-      </div>
+    <div className="loader-container">
+      <div className="loader"></div>
     </div>
   );
 };

@@ -64,7 +64,6 @@ const MainMenu = () => {
         <h4 style={{ margin: 0, marginBottom: "-20px" }}>
           Seleciona a sua idade:
         </h4>
-        {console.log(JSON.parse(localStorage.getItem("ageGroupID")) === 2)}
         <div className="groups-btns">
           <button
             className={`continue-btn  ${
@@ -72,7 +71,7 @@ const MainMenu = () => {
                 ? " selected"
                 : ""
             }`}
-            onClick={() => handleAgeChange(0)}
+            onClick={() => handleAgeChange(1)}
             onMouseEnter={playHoverSound}
           >
             - 11
@@ -84,7 +83,7 @@ const MainMenu = () => {
                 ? " selected"
                 : ""
             }`}
-            onClick={() => handleAgeChange(1)}
+            onClick={() => handleAgeChange(2)}
             onMouseEnter={playHoverSound}
           >
             11 - 13
@@ -96,7 +95,7 @@ const MainMenu = () => {
                 ? "selected"
                 : ""
             }`}
-            onClick={() => handleAgeChange(2)}
+            onClick={() => handleAgeChange(3)}
             onMouseEnter={playHoverSound}
           >
             13 +

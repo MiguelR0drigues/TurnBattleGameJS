@@ -3,10 +3,11 @@ import { useNavigate } from "react-router-dom";
 import hoverSoundFile from "../../assets/audio/button-hover.mp3";
 import correctOptionSoundFile from "../../assets/audio/correct-option.mp3";
 import wrongOptionSoundFile from "../../assets/audio/wrong-option.mp3";
+import opponentPokemon from "../../assets/charmander.png";
+import yourPokemon from "../../assets/pikachu.png";
 import { getEveryQuestionForLevelOfAgeGroup } from "../../utils";
+import Loader from "../Loader/Loader"; // Replace "../Loader/Loader" with the correct path to your Loader component
 import "./Battle.css";
-import opponentPokemon from "./charmander.png";
-import yourPokemon from "./pikachu.png";
 
 const Battle = () => {
   const [playerHealth, setPlayerHealth] = useState(100);
@@ -20,6 +21,9 @@ const Battle = () => {
   const [opponentDamageTaken, setOpponentDamageTaken] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isPageDisabled, setIsPageDisabled] = useState(false);
+  const [allQuestions, setAllQuestions] = useState([]);
+  const [level, setLevel] = useState();
+  const [showLoader, setShowLoader] = useState(true);
 
   const opponentHealthRef = useRef(null);
   const playerHealthRef = useRef(null);
@@ -32,7 +36,23 @@ const Battle = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    fetchData();
+    setIsModalOpen(false);
+    setIsPageDisabled(false);
+    setShowLoader(true);
+    fetchQuestions();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [level]);
+
+  useEffect(() => {
+    if (allQuestions.length > 0) {
+      // Fetch the next question for the player
+      fetchData();
+      setShowLoader(false);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [allQuestions]);
+  useEffect(() => {
+    setLevel(JSON.parse(localStorage.getItem("levelNumber")));
   }, []);
 
   useEffect(() => {
@@ -50,7 +70,11 @@ const Battle = () => {
     if (playerHealth <= 0) {
       handlePlayerDefeat();
     }
-  }, [playerHealth]);
+    if (opponentHealth <= 0) {
+      handleOpponentDefeat();
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [playerHealth, opponentHealth]);
 
   const handleMainMenuClick = () => {
     navigate("/");
@@ -58,27 +82,24 @@ const Battle = () => {
 
   const fetchData = async () => {
     try {
-      const randomIndex = Math.floor(Math.random() * 20);
-      const questions = await fetchQuestions();
-      const selectedQuestion = questions[randomIndex];
+      if (allQuestions.length > 0) {
+        const randomIndex = Math.floor(Math.random() * allQuestions.length);
+        const selectedQuestion = allQuestions[randomIndex];
 
-      // Destructure question, options, and correct option from the selected question
-      const { question, incorrectOptions, correctOption } = selectedQuestion;
-      console.log(selectedQuestion);
-      console.log(question);
+        // Destructure question, options, and correct option from the selected question
+        const { question, incorrectOptions, correctOption } = selectedQuestion;
 
-      // Shuffle the options randomly
-      const shuffledOptions = shuffleOptions([
-        ...incorrectOptions,
-        correctOption,
-      ]);
+        // Shuffle the options randomly
+        const shuffledOptions = shuffleOptions([
+          ...incorrectOptions,
+          correctOption,
+        ]);
 
-      console.log(shuffleOptions);
-
-      // Update state with the fetched question, shuffled options, and correct option
-      setQuestion(question);
-      setOptions(shuffledOptions);
-      setCorrectOption(correctOption);
+        // Update state with the fetched question, shuffled options, and correct option
+        setQuestion(question);
+        setOptions(shuffledOptions);
+        setCorrectOption(correctOption);
+      }
     } catch (error) {
       console.error("Error fetching questions:", error);
     }
@@ -87,13 +108,11 @@ const Battle = () => {
   const fetchQuestions = async () => {
     try {
       const ageGroupID = JSON.parse(localStorage.getItem("ageGroupID"));
-      const levelNumber = JSON.parse(localStorage.getItem("levelNumber"));
       const result = await getEveryQuestionForLevelOfAgeGroup(
         ageGroupID,
-        levelNumber
+        level
       );
-      localStorage.setItem("questions", JSON.stringify(result));
-      return result;
+      setAllQuestions(result);
     } catch (error) {
       console.error("Error fetching questions:", error);
       throw error; // Rethrow the error to be caught in the useEffect
@@ -201,106 +220,139 @@ const Battle = () => {
     setIsPageDisabled(true);
   };
 
+  const handleOpponentDefeat = () => {
+    localStorage.setItem("levelNumber", level + 1);
+    setIsModalOpen(true);
+    setIsPageDisabled(true);
+  };
+
+  const handleNextLevelClick = () => {
+    setPlayerHealth(100);
+    setOpponentHealth(100);
+    setLevel(level + 1);
+    localStorage.setItem("levelNumber", level + 1);
+  };
   return (
     <>
-      <div className="battle-container">
-        <div className="battle-background">
-          <div className="opponent-container">
-            <div className="opponent-health">
-              <div className="pokemon-name">Charmander (Adversário)</div>
-              <div className="pokemon-health-bar">
-                <label htmlFor="opponent-health">HP </label>
-                <progress
-                  ref={opponentHealthRef}
-                  id="opponent-health"
-                  value={opponentHealth}
-                  max="100"
-                ></progress>
-              </div>
-              <div className="pokemon-health-number">
-                {opponentHealth} / 100
-              </div>
-            </div>
-            <div className="opponent-pokemon">
-              {opponentDamageTaken && (
-                <div className="damage-taken dt-opponent">
-                  -{opponentDamageTaken}
+      {showLoader ? (
+        <Loader />
+      ) : (
+        <div className="battle-container">
+          <div className="battle-background">
+            <div className="opponent-container">
+              <div className="opponent-health">
+                <div className="pokemon-name">Charmander (Adversário)</div>
+                <div className="pokemon-health-bar">
+                  <label htmlFor="opponent-health">HP </label>
+                  <progress
+                    ref={opponentHealthRef}
+                    id="opponent-health"
+                    value={opponentHealth}
+                    max="100"
+                  ></progress>
                 </div>
-              )}
-              <img
-                ref={opponentImageRef}
-                src={opponentPokemon}
-                alt="opponent pokemon"
-                className={
-                  isOpponentShaking
-                    ? "shake-animation"
-                    : opponentDamageTaken
-                    ? "blink-animation"
-                    : ""
-                }
-              />
-            </div>
-          </div>
-          <div className="player-container">
-            <div className="your-pokemon">
-              {playerDamageTaken && (
-                <div className="damage-taken dt-player">
-                  -{playerDamageTaken}
+                <div className="pokemon-health-number">
+                  {opponentHealth} / 100
                 </div>
-              )}
-              <img
-                ref={playerImageRef}
-                src={yourPokemon}
-                alt="your pokemon choice"
-                className={
-                  isPlayerShaking
-                    ? "shake-animation"
-                    : playerDamageTaken
-                    ? "blink-animation"
-                    : ""
-                }
-              />
-            </div>
-            <div className="your-health">
-              <div className="pokemon-name">Pikachu (Tu)</div>
-              <div className="pokemon-health-bar">
-                <label htmlFor="player-health">HP </label>
-                <progress
-                  ref={playerHealthRef}
-                  id="player-health"
-                  value={playerHealth}
-                  max="100"
-                ></progress>
               </div>
-              <div className="pokemon-health-number">{playerHealth} / 100</div>
+              <div className="opponent-pokemon">
+                {opponentDamageTaken && (
+                  <div className="damage-taken dt-opponent">
+                    -{opponentDamageTaken}
+                  </div>
+                )}
+                <img
+                  ref={opponentImageRef}
+                  src={opponentPokemon}
+                  alt="opponent pokemon"
+                  className={
+                    isOpponentShaking
+                      ? "shake-animation"
+                      : opponentDamageTaken
+                      ? "blink-animation"
+                      : ""
+                  }
+                />
+              </div>
             </div>
-          </div>
-          <div className="bottom-container">
-            <div className="question-container">{question}</div>
-            <div className="options-container">
-              {options.map((option, index) => (
-                <button
-                  key={index}
-                  className={`option-button ${
-                    option === correctOption ? "correct-option" : ""
-                  }`}
-                  onClick={() => handlePlayerAnswer(option)}
-                  onMouseEnter={playHoverSound}
-                >
-                  {option}
-                </button>
-              ))}
+            <div className="player-container">
+              <div className="your-pokemon">
+                {playerDamageTaken && (
+                  <div className="damage-taken dt-player">
+                    -{playerDamageTaken}
+                  </div>
+                )}
+                <img
+                  ref={playerImageRef}
+                  src={yourPokemon}
+                  alt="your pokemon choice"
+                  className={
+                    isPlayerShaking
+                      ? "shake-animation"
+                      : playerDamageTaken
+                      ? "blink-animation"
+                      : ""
+                  }
+                />
+              </div>
+              <div className="your-health">
+                <div className="pokemon-name">Pikachu (Tu)</div>
+                <div className="pokemon-health-bar">
+                  <label htmlFor="player-health">HP </label>
+                  <progress
+                    ref={playerHealthRef}
+                    id="player-health"
+                    value={playerHealth}
+                    max="100"
+                  ></progress>
+                </div>
+                <div className="pokemon-health-number">
+                  {playerHealth} / 100
+                </div>
+              </div>
+            </div>
+            <div className="bottom-container">
+              <div className="question-container">{question}</div>
+              <div className="options-container">
+                {options.map((option, index) => (
+                  <button
+                    key={index}
+                    className={`option-button ${
+                      option === correctOption ? "correct-option" : ""
+                    }`}
+                    onClick={() => handlePlayerAnswer(option)}
+                    onMouseEnter={playHoverSound}
+                  >
+                    {option}
+                  </button>
+                ))}
+              </div>
             </div>
           </div>
         </div>
-      </div>
-      {isModalOpen && (
+      )}
+
+      {isModalOpen && playerHealth <= 0 && (
         <div className="modal-overlay">
           <div className="modal-content">
             <h2>Perdeste</h2>
             <p>Foste derrotado desta vez!</p>
             <button onClick={handleMainMenuClick} onMouseEnter={playHoverSound}>
               Voltar ao início
+            </button>
+          </div>
+        </div>
+      )}
+      {isModalOpen && opponentHealth <= 0 && (
+        <div className="modal-overlay">
+          <div className="modal-content-success">
+            <h2>Venceste</h2>
+            <p>Parabéns, avança para o próximo nível!</p>
+            <button
+              onClick={handleNextLevelClick}
+              onMouseEnter={playHoverSound}
+            >
+              Avançar para o próximo nível
             </button>
           </div>
         </div>
