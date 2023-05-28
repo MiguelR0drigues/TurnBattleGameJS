@@ -98,8 +98,8 @@
 }
 
 .your-pokemon > img {
-  height: 25rem;
-  margin-bottom: -3rem;
+  max-height: 20rem;
+  margin-bottom: 2rem;
   margin-left: -1.5rem;
 }
 
@@ -117,7 +117,7 @@
   background-color: rgb(109, 109, 109, 0.9);
   min-height: 40%;
   min-width: 30rem;
-  margin-right: -20rem;
+  margin-right: -16rem;
   margin-bottom: 3.9rem;
   display: flex;
   flex-direction: column;
