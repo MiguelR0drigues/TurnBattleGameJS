@@ -14,8 +14,6 @@ import Loader from "../Loader/Loader";
 import "./Battle.css";
 
 const Battle = () => {
-  const [playerPokemon, setPlayerPokemon] = useState("pikachu");
-  const [opponentPokemon, setOpponentPokemon] = useState("charmander");
   const [playerHealth, setPlayerHealth] = useState(100);
   const [opponentHealth, setOpponentHealth] = useState(100);
   const [question, setQuestion] = useState("");
