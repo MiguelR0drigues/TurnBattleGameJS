@@ -40,6 +40,9 @@ const MainMenu = () => {
 
     correctOptionSoundRef.current = new Audio(correctOptionSoundFile);
     correctOptionSoundRef.current.volume = 1.0;
+
+    localStorage.setItem("ageGroupID", 1);
+    localStorage.setItem("levelNumber", 1);
   }, []);
 
   return (

@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import hoverSoundFile from "../../assets/audio/button-hover.mp3";
 import correctOptionSoundFile from "../../assets/audio/correct-option.mp3";
 import wrongOptionSoundFile from "../../assets/audio/wrong-option.mp3";
+import { getEveryQuestionForLevelOfAgeGroup } from "../../utils";
 import "./Battle.css";
 import opponentPokemon from "./charmander.png";
 import yourPokemon from "./pikachu.png";
@@ -31,9 +32,7 @@ const Battle = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    // Fetch question and options from API
-    fetchQuestion();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+    fetchData();
   }, []);
 
   useEffect(() => {
@@ -57,50 +56,63 @@ const Battle = () => {
     navigate("/");
   };
 
-  const fetchQuestion = () => {
-    // Make API call to fetch question and options
-    // Replace this with your own API call implementation
+  const fetchData = async () => {
+    try {
+      const randomIndex = Math.floor(Math.random() * 20);
+      const questions = await fetchQuestions();
+      const selectedQuestion = questions[randomIndex];
 
-    // Example API response structure
-    const response = {
-      question: "What is the capital of France?",
-      incorrectOptions: ["London", "Berlin", "Rome"],
-      correctOption: "Paris",
-    };
+      // Destructure question, options, and correct option from the selected question
+      const { question, incorrectOptions, correctOption } = selectedQuestion;
+      console.log(selectedQuestion);
+      console.log(question);
 
-    // Extract question, options, and correct option from the API response
-    const { question, incorrectOptions, correctOption } = response;
+      // Shuffle the options randomly
+      const shuffledOptions = shuffleOptions([
+        ...incorrectOptions,
+        correctOption,
+      ]);
 
-    // Shuffle the options randomly
-    const shuffledOptions = shuffleOptions([
-      ...incorrectOptions,
-      correctOption,
-    ]);
+      console.log(shuffleOptions);
 
-    // Update state with the fetched question, shuffled options, and correct option
-    setQuestion(question);
-    setOptions(shuffledOptions);
-    setCorrectOption(correctOption);
+      // Update state with the fetched question, shuffled options, and correct option
+      setQuestion(question);
+      setOptions(shuffledOptions);
+      setCorrectOption(correctOption);
+    } catch (error) {
+      console.error("Error fetching questions:", error);
+    }
+  };
+
+  const fetchQuestions = async () => {
+    try {
+      const ageGroupID = JSON.parse(localStorage.getItem("ageGroupID"));
+      const levelNumber = JSON.parse(localStorage.getItem("levelNumber"));
+      const result = await getEveryQuestionForLevelOfAgeGroup(
+        ageGroupID,
+        levelNumber
+      );
+      localStorage.setItem("questions", JSON.stringify(result));
+      return result;
+    } catch (error) {
+      console.error("Error fetching questions:", error);
+      throw error; // Rethrow the error to be caught in the useEffect
+    }
   };
 
   const shuffleOptions = (array) => {
-    let currentIndex = array.length,
-      randomIndex;
+    const [question, ...options] = array; // Destructure the question and options
+    const shuffledOptions = [...options];
 
-    // While there remain elements to shuffle.
-    while (currentIndex !== 0) {
-      // Pick a remaining element.
-      randomIndex = Math.floor(Math.random() * currentIndex);
-      currentIndex--;
-
-      // And swap it with the current element.
-      [array[currentIndex], array[randomIndex]] = [
-        array[randomIndex],
-        array[currentIndex],
+    for (let i = shuffledOptions.length - 1; i > 0; i--) {
+      const randomIndex = Math.floor(Math.random() * (i + 1));
+      [shuffledOptions[i], shuffledOptions[randomIndex]] = [
+        shuffledOptions[randomIndex],
+        shuffledOptions[i],
       ];
     }
 
-    return array;
+    return [question, ...shuffledOptions]; // Combine the shuffled options with the question
   };
 
   const handlePlayerAnswer = (selectedOption) => {
@@ -156,7 +168,7 @@ const Battle = () => {
     }
 
     // Fetch the next question for the player
-    fetchQuestion();
+    fetchData();
 
     // Remove the shaking animation state after the animation finishes
     setTimeout(() => {
