@@ -3,13 +3,19 @@ import { useNavigate } from "react-router-dom";
 import hoverSoundFile from "../../assets/audio/button-hover.mp3";
 import correctOptionSoundFile from "../../assets/audio/correct-option.mp3";
 import wrongOptionSoundFile from "../../assets/audio/wrong-option.mp3";
-import opponentPokemon from "../../assets/charmander.png";
-import yourPokemon from "../../assets/pikachu.png";
+import bulbasaur from "../../assets/bulbasaur.png";
+import charmander from "../../assets/charmander.png";
+import eevee from "../../assets/eevee.webp";
+import pikachu from "../../assets/pikachu.png";
+import poliwag from "../../assets/poliwag.png";
+import squirtle from "../../assets/squirtle.png";
 import { getEveryQuestionForLevelOfAgeGroup } from "../../utils";
-import Loader from "../Loader/Loader"; // Replace "../Loader/Loader" with the correct path to your Loader component
+import Loader from "../Loader/Loader";
 import "./Battle.css";
 
 const Battle = () => {
+  const [playerPokemon, setPlayerPokemon] = useState("pikachu");
+  const [opponentPokemon, setOpponentPokemon] = useState("charmander");
   const [playerHealth, setPlayerHealth] = useState(100);
   const [opponentHealth, setOpponentHealth] = useState(100);
   const [question, setQuestion] = useState("");
@@ -51,6 +57,7 @@ const Battle = () => {
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [allQuestions]);
+
   useEffect(() => {
     setLevel(JSON.parse(localStorage.getItem("levelNumber")));
   }, []);
@@ -79,6 +86,59 @@ const Battle = () => {
   const handleMainMenuClick = () => {
     navigate("/");
   };
+
+  const getPlayerCharacter = () => {
+    switch (localStorage.getItem("avatar")) {
+      case "pikachu":
+        return {
+          name: "Pikachu",
+          image: pikachu,
+        };
+      case "eevee":
+        return {
+          name: "Eevee",
+          image: eevee,
+        };
+      case "bulbasaur":
+        return {
+          name: "Bulbasaur",
+          image: bulbasaur,
+        };
+      default:
+        return {
+          name: "Pikachu",
+          image: pikachu,
+        };
+    }
+  };
+
+  const getOpponentCharacter = () => {
+    switch (localStorage.getItem("levelNumber")) {
+      case "1":
+        return {
+          name: "Charmander",
+          image: charmander,
+        };
+      case "2":
+        return {
+          name: "Squirtle",
+          image: squirtle,
+        };
+      case "3":
+        return {
+          name: "Poliwag",
+          image: poliwag,
+        };
+      default:
+        return {
+          name: "Charmander",
+          image: charmander,
+        };
+    }
+  };
+
+  const playerCharacter = getPlayerCharacter();
+  const opponentCharacter = getOpponentCharacter();
 
   const fetchData = async () => {
     try {
@@ -241,7 +301,9 @@ const Battle = () => {
           <div className="battle-background">
             <div className="opponent-container">
               <div className="opponent-health">
-                <div className="pokemon-name">Charmander (Adversário)</div>
+                <div className="pokemon-name">
+                  {opponentCharacter.name} (Adversário)
+                </div>
                 <div className="pokemon-health-bar">
                   <label htmlFor="opponent-health">HP </label>
                   <progress
@@ -263,7 +325,7 @@ const Battle = () => {
                 )}
                 <img
                   ref={opponentImageRef}
-                  src={opponentPokemon}
+                  src={opponentCharacter.image}
                   alt="opponent pokemon"
                   className={
                     isOpponentShaking
@@ -284,7 +346,7 @@ const Battle = () => {
                 )}
                 <img
                   ref={playerImageRef}
-                  src={yourPokemon}
+                  src={playerCharacter.image}
                   alt="your pokemon choice"
                   className={
                     isPlayerShaking
@@ -296,7 +358,7 @@ const Battle = () => {
                 />
               </div>
               <div className="your-health">
-                <div className="pokemon-name">Pikachu (Tu)</div>
+                <div className="pokemon-name">{playerCharacter.name} (Tu)</div>
                 <div className="pokemon-health-bar">
                   <label htmlFor="player-health">HP </label>
                   <progress

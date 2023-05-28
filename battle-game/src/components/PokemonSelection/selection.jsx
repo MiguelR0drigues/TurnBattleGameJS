@@ -13,9 +13,9 @@ const Selection = () => {
   const correctOptionSoundRef = useRef(null);
 
   const chars = [
-    { id: 1, name: "Eevee", image: "eevee.png" },
-    { id: 2, name: "Meowth", image: "meowth.webp" },
-    { id: 3, name: "Pikachu", image: "pikachu.png" },
+    { id: 1, name: "eevee", image: "eevee.png" },
+    { id: 2, name: "bulbasaur", image: "bulbasaur.png" },
+    { id: 3, name: "pikachu", image: "pikachu.png" },
     // Add more characters as needed
   ];
 
@@ -73,6 +73,7 @@ const Selection = () => {
     correctOptionSoundRef.current.currentTime = 0;
     correctOptionSoundRef.current.play();
     setSelectedChar(character);
+    localStorage.setItem("avatar", character.name);
   };
 
   return (
