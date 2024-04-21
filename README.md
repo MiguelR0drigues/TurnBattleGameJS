@@ -10,7 +10,7 @@ For each correct answer you inflict damage, for every wrong one you lose HP.
 
 
 ## Tech used:
-- Javascript
+- ReactJS
 - HTML
 - CSS
 - Firebase (database)
